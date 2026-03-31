@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="720.0" prefWidth="840.0" spacing="20.0" styleClass="view-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hotel.controllers.BillingController">
+   <children>
+      <Label styleClass="view-title" text="Billing &amp; Invoices" />
+      <TableView fx:id="billTable" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="colBillId" prefWidth="120.0" text="Invoice Number" />
+          <TableColumn fx:id="colBookingId" prefWidth="120.0" text="Booking ID" />
+            <TableColumn fx:id="colCustomerName" prefWidth="180.0" text="Customer Name" />
+            <TableColumn fx:id="colRoomNumber" prefWidth="120.0" text="Room Number" />
+            <TableColumn fx:id="colAmount" prefWidth="150.0" text="Total Amount ($)" />
+            <TableColumn fx:id="colDate" prefWidth="120.0" text="Invoice Date" />
+        </columns>
+      </TableView>
+   </children>
+</VBox>
