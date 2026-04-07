@@ -1,29 +1,40 @@
 package com.hotel.controllers;
 
 import com.hotel.models.Customer;
+import com.hotel.models.Pair;
+import com.hotel.models.Booking;
 import com.hotel.services.CustomerService;
+import com.hotel.services.BookingService;
 import com.hotel.utils.AlertBox;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerController {
 
     @FXML
-    private TableView<Customer> customerTable;
+    private TableView<Pair<Customer, String>> customerTable;
 
     @FXML
-    private TableColumn<Customer, String> colCustomerId;
+    private TableColumn<Pair<Customer, String>, String> colCustomerId;
 
     @FXML
-    private TableColumn<Customer, String> colName;
+    private TableColumn<Pair<Customer, String>, String> colName;
 
     @FXML
-    private TableColumn<Customer, String> colPhone;
+    private TableColumn<Pair<Customer, String>, String> colPhone;
+
+    @FXML
+    private TableColumn<Pair<Customer, String>, String> colAllocatedRoom;
 
     @FXML
     private TextField txtCustomerId;
@@ -35,19 +46,32 @@ public class CustomerController {
     private TextField txtPhone;
 
     private CustomerService customerService = new CustomerService();
-    private ObservableList<Customer> customerList;
+    private BookingService bookingService = new BookingService();
+    private ObservableList<Pair<Customer, String>> customerList;
 
     @FXML
     public void initialize() {
-        colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        colCustomerId.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getKey().getCustomerId()));
+        colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getKey().getName()));
+        colPhone.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getKey().getPhone()));
+        colAllocatedRoom.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue()));
 
         loadCustomers();
     }
 
     private void loadCustomers() {
-        customerList = FXCollections.observableArrayList(customerService.getAllCustomers());
+        List<Pair<Customer, String>> pairs = new ArrayList<>();
+        for (Customer c : customerService.getAllCustomers()) {
+            String room = "None";
+            for (Booking b : bookingService.getAllBookings()) {
+                if (b.getCustomerId().equals(c.getCustomerId())) {
+                    room = b.getRoomNumber();
+                    break;
+                }
+            }
+            pairs.add(new Pair<>(c, room));
+        }
+        customerList = FXCollections.observableArrayList(pairs);
         customerTable.setItems(customerList);
     }
 
@@ -71,6 +95,33 @@ public class CustomerController {
             loadCustomers();
         } else {
             AlertBox.showError("Error", "Customer ID already exists!");
+        }
+    }
+
+    @FXML
+    private void removeCustomer() {
+        Pair<Customer, String> selected = customerTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            AlertBox.showError("Selection Error", "Please select a customer to remove.");
+            return;
+        }
+
+        if (!selected.getValue().equals("None")) {
+            AlertBox.showError("Restriction Error", "Cannot remove a customer who is currently checked into room " + selected.getValue() + "!");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove " + selected.getKey().getName() + "?", ButtonType.YES, ButtonType.NO);
+        confirm.showAndWait();
+
+        if (confirm.getResult() == ButtonType.YES) {
+            boolean success = customerService.removeCustomer(selected.getKey().getCustomerId());
+            if (success) {
+                AlertBox.showInfo("Success", "Customer removed.");
+                loadCustomers();
+            } else {
+                AlertBox.showError("Error", "Could not remove customer.");
+            }
         }
     }
 }

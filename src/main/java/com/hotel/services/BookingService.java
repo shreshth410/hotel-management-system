@@ -1,7 +1,7 @@
 package com.hotel.services;
 
 import com.hotel.models.Booking;
-import com.hotel.models.Room;
+import com.hotel.models.AbstractRoom;
 import com.hotel.repository.DataStore;
 
 import java.time.LocalDate;
@@ -16,14 +16,14 @@ public class BookingService {
         return DataStore.getContainer().getBookings();
     }
 
-    public boolean bookRoom(String roomNumber, String customerId, LocalDate checkIn, LocalDate checkOut) {
+    public boolean bookRoom(String roomNumber, String customerId, LocalDate checkIn, LocalDate checkOut, String amenities, double extraCost) {
         if (checkOut.isBefore(checkIn)) {
             return false;
         }
 
         // Check if room exists and is available
-        Room roomToBook = null;
-        for (Room r : roomService.getAllRooms()) {
+        AbstractRoom roomToBook = null;
+        for (AbstractRoom r : roomService.getAllRooms()) {
             if (r.getRoomNumber().equalsIgnoreCase(roomNumber) && r.isAvailable()) {
                 roomToBook = r;
                 break;
@@ -35,7 +35,7 @@ public class BookingService {
         }
 
         String bookingId = "BKG-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        Booking newBooking = new Booking(bookingId, roomNumber, customerId, checkIn, checkOut);
+        Booking newBooking = new Booking(bookingId, roomNumber, customerId, checkIn, checkOut, amenities, extraCost);
         
         getAllBookings().add(newBooking);
         

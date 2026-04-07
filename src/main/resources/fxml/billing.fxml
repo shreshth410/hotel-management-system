@@ -1,22 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox prefHeight="720.0" prefWidth="840.0" spacing="20.0" styleClass="view-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hotel.controllers.BillingController">
-   <children>
-      <Label styleClass="view-title" text="Billing &amp; Invoices" />
-      <TableView fx:id="billTable" VBox.vgrow="ALWAYS">
-        <columns>
-          <TableColumn fx:id="colBillId" prefWidth="120.0" text="Invoice Number" />
-          <TableColumn fx:id="colBookingId" prefWidth="120.0" text="Booking ID" />
-            <TableColumn fx:id="colCustomerName" prefWidth="180.0" text="Customer Name" />
-            <TableColumn fx:id="colRoomNumber" prefWidth="120.0" text="Room Number" />
-            <TableColumn fx:id="colAmount" prefWidth="150.0" text="Total Amount ($)" />
-            <TableColumn fx:id="colDate" prefWidth="120.0" text="Invoice Date" />
-        </columns>
-      </TableView>
-   </children>
-</VBox>
+<ScrollPane fitToWidth="true" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hotel.controllers.BillingController">
+    <content>
+        <VBox spacing="20.0" styleClass="view-pane">
+           <children>
+              <Label styleClass="view-title" text="Billing &amp; Analytics" minHeight="-Infinity" />
+              <FlowPane hgap="15.0" vgap="15.0" minHeight="-Infinity">
+                 <children>
+                    <VBox styleClass="stat-card" prefWidth="180.0">
+                       <children>
+                          <Label styleClass="stat-title" text="Total Bills" minWidth="-Infinity" />
+                          <Label fx:id="totalBillsLbl" styleClass="stat-value" text="0" minWidth="-Infinity" />
+                       </children>
+                    </VBox>
+                    <VBox styleClass="stat-card" prefWidth="250.0">
+                       <children>
+                          <Label styleClass="stat-title" text="Total Revenue" minWidth="-Infinity" />
+                          <Label fx:id="totalRevLbl" styleClass="stat-value" text="₹ 0.0" minWidth="-Infinity" />
+                       </children>
+                    </VBox>
+                    <VBox styleClass="stat-card" prefWidth="250.0">
+                       <children>
+                          <Label styleClass="stat-title" text="This Month" minWidth="-Infinity" />
+                          <Label fx:id="thisMonthRevLbl" styleClass="stat-value" text="₹ 0.0" minWidth="-Infinity" />
+                       </children>
+                    </VBox>
+                    <VBox styleClass="stat-card" prefWidth="200.0">
+                       <children>
+                          <Label styleClass="stat-title" text="Avg Stay" minWidth="-Infinity" />
+                          <Label fx:id="avgStayLbl" styleClass="stat-value" text="0 nights" minWidth="-Infinity" />
+                       </children>
+                    </VBox>
+                 </children>
+              </FlowPane>
+
+              <HBox spacing="15.0" minHeight="350.0">
+                 <children>
+                     <VBox spacing="15.0" prefWidth="350.0">
+                         <children>
+                             <Label styleClass="form-title" text="Revenue by Room Type" minHeight="-Infinity" />
+                             <VBox spacing="10.0" styleClass="form-card" minHeight="-Infinity">
+                                 <children>
+                                     <Label text="Standard" />
+                                     <HBox spacing="10.0">
+                                         <ProgressBar fx:id="progStandard" progress="0.0" prefWidth="150" />
+                                         <Label fx:id="lblPctStandard" text="0%" />
+                                     </HBox>
+                                     <Label text="Deluxe" />
+                                     <HBox spacing="10.0">
+                                         <ProgressBar fx:id="progDeluxe" progress="0.0" prefWidth="150" />
+                                         <Label fx:id="lblPctDeluxe" text="0%" />
+                                     </HBox>
+                                     <Label text="Suite" />
+                                     <HBox spacing="10.0">
+                                         <ProgressBar fx:id="progSuite" progress="0.0" prefWidth="150" />
+                                         <Label fx:id="lblPctSuite" text="0%" />
+                                     </HBox>
+                                 </children>
+                             </VBox>
+                             <Label styleClass="form-title" text="Recent Guests Revenue" minHeight="-Infinity" />
+                             <TableView fx:id="recentGuestsTable" minHeight="150.0" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                                 <columns>
+                                     <TableColumn fx:id="colGuestId" text="Guest Name" prefWidth="200" />
+                                     <TableColumn fx:id="colGuestRev" text="Revenue" prefWidth="120" />
+                                 </columns>
+                             </TableView>
+                         </children>
+                     </VBox>
+
+                     <BarChart fx:id="monthlyRevChart" title="Monthly Revenue" HBox.hgrow="ALWAYS" minHeight="350.0" prefHeight="450.0">
+                         <xAxis><CategoryAxis label="Month" /></xAxis>
+                         <yAxis><NumberAxis label="Revenue (₹)" /></yAxis>
+                     </BarChart>
+                 </children>
+              </HBox>
+
+              <Label styleClass="form-title" text="Full Billing History" minHeight="-Infinity" />
+              <TableView fx:id="billTable" minHeight="250.0" prefHeight="350.0" VBox.vgrow="ALWAYS">
+                 <columns>
+                    <TableColumn fx:id="colBillId" prefWidth="100.0" text="Bill ID" />
+                    <TableColumn fx:id="colBookingId" prefWidth="140.0" text="Booking ID" />
+                    <TableColumn fx:id="colCustomerName" prefWidth="200.0" text="Customer Name" />
+                    <TableColumn fx:id="colRoomNumber" prefWidth="100.0" text="Room No" />
+                    <TableColumn fx:id="colAmount" prefWidth="150.0" text="Amount" />
+                    <TableColumn fx:id="colDate" prefWidth="150.0" text="Date" />
+                 </columns>
+              </TableView>
+           </children>
+        </VBox>
+    </content>
+</ScrollPane>
