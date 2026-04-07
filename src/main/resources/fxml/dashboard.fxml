@@ -1,43 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox prefHeight="720.0" prefWidth="840.0" spacing="30.0" styleClass="view-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hotel.controllers.DashboardController">
+<VBox prefHeight="720.0" prefWidth="840.0" spacing="15.0" styleClass="view-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hotel.controllers.DashboardController">
    <children>
       <Label styleClass="view-title" text="Hotel Dashboard" />
-      <HBox spacing="20.0" VBox.vgrow="NEVER">
+      <GridPane hgap="15.0" vgap="15.0">
+          <columnConstraints>
+              <ColumnConstraints percentWidth="33.3" />
+              <ColumnConstraints percentWidth="33.3" />
+              <ColumnConstraints percentWidth="33.4" />
+          </columnConstraints>
+          <rowConstraints>
+              <RowConstraints />
+              <RowConstraints />
+          </rowConstraints>
+          <children>
+             <VBox styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                 <Label styleClass="stat-title" text="Total Rooms" />
+                 <Label fx:id="totalRoomsLbl" styleClass="stat-value" text="0" />
+             </VBox>
+             <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                 <Label styleClass="stat-title" text="Available Rooms" />
+                 <Label fx:id="availableRoomsLbl" styleClass="stat-value" text="0" />
+             </VBox>
+             <VBox styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                 <Label styleClass="stat-title" text="Occupied Rooms" />
+                 <Label fx:id="occupiedRoomsLbl" styleClass="stat-value" text="0" />
+             </VBox>
+             <VBox styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                 <Label styleClass="stat-title" text="Total Customers" />
+                 <Label fx:id="totalCustomersLbl" styleClass="stat-value" text="0" />
+             </VBox>
+             <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                 <Label styleClass="stat-title" text="Active Bookings" />
+                 <Label fx:id="activeBookingsLbl" styleClass="stat-value" text="0" />
+             </VBox>
+             <VBox styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                 <Label styleClass="stat-title" text="Total Revenue" />
+                 <Label fx:id="totalRevenueLbl" styleClass="stat-value" text="₹ 0.0" />
+             </VBox>
+          </children>
+      </GridPane>
+      
+      <HBox spacing="15.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="stat-title" text="Total Rooms" />
-                  <Label fx:id="totalRoomsLbl" styleClass="stat-value" text="0" />
-               </children>
-            </VBox>
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="stat-title" text="Available Rooms" />
-                  <Label fx:id="availableRoomsLbl" styleClass="stat-value" text="0" />
-               </children>
-            </VBox>
+             <PieChart fx:id="roomTypeChart" title="Room Distribution" HBox.hgrow="ALWAYS" />
+             <BarChart fx:id="occupancyChart" title="Occupancy by Type" HBox.hgrow="ALWAYS">
+                 <xAxis><CategoryAxis label="Room Type" /></xAxis>
+                 <yAxis><NumberAxis label="Count" /></yAxis>
+             </BarChart>
          </children>
       </HBox>
-      <HBox spacing="20.0">
-         <children>
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="stat-title" text="Total Customers" />
-                  <Label fx:id="totalCustomersLbl" styleClass="stat-value" text="0" />
-               </children>
-            </VBox>
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="stat-title" text="Active Bookings" />
-                  <Label fx:id="activeBookingsLbl" styleClass="stat-value" text="0" />
-               </children>
-            </VBox>
-         </children>
-      </HBox>
+
+      <VBox spacing="10.0" VBox.vgrow="SOMETIMES">
+          <Label styleClass="form-title" text="Recent Bookings" />
+          <TableView fx:id="recentBookingsTable" prefHeight="150.0">
+             <columns>
+                <TableColumn fx:id="colBookingId" text="Booking ID" prefWidth="120" />
+                <TableColumn fx:id="colRoomNum" text="Room Number" prefWidth="120" />
+                <TableColumn fx:id="colGuest" text="Guest ID" prefWidth="120" />
+                <TableColumn fx:id="colCheckIn" text="Check In" prefWidth="120" />
+             </columns>
+          </TableView>
+      </VBox>
    </children>
 </VBox>

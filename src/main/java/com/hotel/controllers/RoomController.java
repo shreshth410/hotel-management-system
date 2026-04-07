@@ -1,33 +1,34 @@
 package com.hotel.controllers;
 
-import com.hotel.models.Room;
+import com.hotel.models.AbstractRoom;
+import com.hotel.models.RoomType;
 import com.hotel.services.RoomService;
+import com.hotel.repository.DataStore;
 import com.hotel.utils.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 
 public class RoomController {
 
     @FXML
-    private TableView<Room> roomTable;
+    private TableView<AbstractRoom> roomTable;
 
     @FXML
-    private TableColumn<Room, String> colRoomNumber;
+    private TableColumn<AbstractRoom, String> colRoomNumber;
 
     @FXML
-    private TableColumn<Room, String> colRoomType;
+    private TableColumn<AbstractRoom, RoomType> colRoomType;
 
     @FXML
-    private TableColumn<Room, Double> colPrice;
+    private TableColumn<AbstractRoom, Double> colPrice;
 
     @FXML
-    private TableColumn<Room, Boolean> colAvailable;
+    private TableColumn<AbstractRoom, Boolean> colAvailable;
 
     @FXML
     private TextField txtRoomNumber;
@@ -38,8 +39,12 @@ public class RoomController {
     @FXML
     private TextField txtPrice;
 
+    @FXML
+    private CheckBox chkAvailableOnly;
+
     private RoomService roomService = new RoomService();
-    private ObservableList<Room> roomList;
+    private ObservableList<AbstractRoom> roomList;
+    private FilteredList<AbstractRoom> filteredRoomList;
 
     @FXML
     public void initialize() {
@@ -47,6 +52,41 @@ public class RoomController {
         colRoomType.setCellValueFactory(new PropertyValueFactory<>("roomType"));
         colPrice.setCellValueFactory(new PropertyValueFactory<>("pricePerNight"));
         colAvailable.setCellValueFactory(new PropertyValueFactory<>("available"));
+
+        // Format price to display INR
+        colPrice.setCellFactory(column -> new TableCell<AbstractRoom, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText("₹ " + String.format("%.2f", item));
+                }
+            }
+        });
+
+        // Color-coded availability status
+        colAvailable.setCellFactory(column -> new TableCell<AbstractRoom, Boolean>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    if (item) {
+                        setText("Available");
+                        setTextFill(Color.GREEN);
+                        setStyle("-fx-font-weight: bold;");
+                    } else {
+                        setText("Occupied");
+                        setTextFill(Color.RED);
+                        setStyle("-fx-font-weight: bold;");
+                    }
+                }
+            }
+        });
 
         cbRoomType.getItems().addAll("Standard", "Deluxe", "Suite");
         cbRoomType.getSelectionModel().selectFirst();
@@ -56,7 +96,33 @@ public class RoomController {
 
     private void loadRooms() {
         roomList = FXCollections.observableArrayList(roomService.getAllRooms());
-        roomTable.setItems(roomList);
+        filteredRoomList = new FilteredList<>(roomList, b -> true);
+        roomTable.setItems(filteredRoomList);
+        filterRooms(); // apply current filter
+    }
+
+    @FXML
+    private void filterRooms() {
+        if (chkAvailableOnly != null && filteredRoomList != null) {
+            filteredRoomList.setPredicate(room -> {
+                if (chkAvailableOnly.isSelected()) {
+                    return room.isAvailable();
+                }
+                return true;
+            });
+        }
+    }
+
+    @FXML
+    private void loadData() {
+        DataStore.loadData();
+        loadRooms();
+    }
+
+    @FXML
+    private void saveData() {
+        DataStore.saveData();
+        AlertBox.showInfo("Success", "Data saved successfully to hotel_data.dat.");
     }
 
     @FXML

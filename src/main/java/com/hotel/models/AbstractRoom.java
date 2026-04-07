@@ -2,26 +2,28 @@ package com.hotel.models;
 
 import java.io.Serializable;
 
-public class Room implements Serializable {
+public abstract class AbstractRoom implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    private String roomNumber;
-    private String roomType; // Standard, Deluxe, Suite
-    private double pricePerNight;
-    private boolean available;
+    protected String roomNumber;
+    protected RoomType roomType;
+    protected double pricePerNight;
+    protected boolean available;
 
-    public Room(String roomNumber, String roomType, double pricePerNight, boolean available) {
+    public AbstractRoom(String roomNumber, RoomType roomType, double pricePerNight, boolean available) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.pricePerNight = pricePerNight;
         this.available = available;
     }
 
+    public abstract double calculateTariff(int nights);
+
     public String getRoomNumber() { return roomNumber; }
     public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
 
-    public String getRoomType() { return roomType; }
-    public void setRoomType(String roomType) { this.roomType = roomType; }
+    public RoomType getRoomType() { return roomType; }
+    public void setRoomType(RoomType roomType) { this.roomType = roomType; }
 
     public double getPricePerNight() { return pricePerNight; }
     public void setPricePerNight(double pricePerNight) { this.pricePerNight = pricePerNight; }

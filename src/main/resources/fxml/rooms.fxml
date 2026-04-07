@@ -15,6 +15,14 @@
 <VBox prefHeight="720.0" prefWidth="840.0" spacing="20.0" styleClass="view-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hotel.controllers.RoomController">
    <children>
       <Label styleClass="view-title" text="Room Management" />
+      <HBox spacing="15.0" alignment="CENTER_LEFT">
+          <children>
+              <javafx.scene.control.CheckBox fx:id="chkAvailableOnly" text="Show Available Only" onAction="#filterRooms" />
+              <HBox HBox.hgrow="ALWAYS" />
+              <Button mnemonicParsing="false" onAction="#loadData" styleClass="action-button-secondary" text="Load Data" />
+              <Button mnemonicParsing="false" onAction="#saveData" styleClass="action-button-secondary" text="Save Data" />
+          </children>
+      </HBox>
       <TableView fx:id="roomTable" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="colRoomNumber" prefWidth="150.0" text="Room Number" />

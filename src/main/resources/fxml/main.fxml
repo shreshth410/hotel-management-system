@@ -10,7 +10,7 @@
    <left>
       <VBox prefWidth="240.0" styleClass="sidebar">
          <children>
-            <Label styleClass="brand-logo" text="Blue Hotel" />
+            <Label styleClass="brand-logo" text="CheckInn" />
             <Button mnemonicParsing="false" onAction="#openDashboard" styleClass="nav-button" text="Dashboard" />
             <Button mnemonicParsing="false" onAction="#openRooms" styleClass="nav-button" text="Rooms" />
             <Button mnemonicParsing="false" onAction="#openCustomers" styleClass="nav-button" text="Customers" />

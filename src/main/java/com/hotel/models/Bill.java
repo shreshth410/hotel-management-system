@@ -12,6 +12,7 @@ public class Bill implements Serializable {
     private String roomNumber;
     private double totalAmount;
     private LocalDate billDate;
+    private long stayDuration;
 
     public Bill(String billId, String bookingId, String customerName, String roomNumber, double totalAmount, LocalDate billDate) {
         this.billId = billId;
@@ -20,6 +21,17 @@ public class Bill implements Serializable {
         this.roomNumber = roomNumber;
         this.totalAmount = totalAmount;
         this.billDate = billDate;
+        this.stayDuration = 0; // Default or legacy bills
+    }
+
+    public Bill(String billId, String bookingId, String customerName, String roomNumber, double totalAmount, LocalDate billDate, long stayDuration) {
+        this.billId = billId;
+        this.bookingId = bookingId;
+        this.customerName = customerName;
+        this.roomNumber = roomNumber;
+        this.totalAmount = totalAmount;
+        this.billDate = billDate;
+        this.stayDuration = stayDuration;
     }
 
     public String getBillId() { return billId; }
@@ -28,4 +40,5 @@ public class Bill implements Serializable {
     public String getRoomNumber() { return roomNumber; }
     public double getTotalAmount() { return totalAmount; }
     public LocalDate getBillDate() { return billDate; }
+    public long getStayDuration() { return stayDuration; }
 }

@@ -19,6 +19,7 @@
           <TableColumn fx:id="colCustomerId" prefWidth="150.0" text="Customer ID (Doc)" />
           <TableColumn fx:id="colName" prefWidth="250.0" text="Full Name" />
             <TableColumn fx:id="colPhone" prefWidth="200.0" text="Phone Number" />
+            <TableColumn fx:id="colAllocatedRoom" prefWidth="150.0" text="Allocated Room" />
         </columns>
       </TableView>
       <VBox styleClass="form-card" spacing="15.0">
@@ -43,8 +44,9 @@
                 <RowConstraints />
              </rowConstraints>
           </GridPane>
-          <HBox alignment="CENTER_RIGHT">
+          <HBox alignment="CENTER_RIGHT" spacing="15.0">
              <children>
+                <Button mnemonicParsing="false" onAction="#removeCustomer" styleClass="action-button-secondary" text="Remove Selected" />
                 <Button mnemonicParsing="false" onAction="#addCustomer" styleClass="action-button" text="Add Customer" />
              </children>
           </HBox>

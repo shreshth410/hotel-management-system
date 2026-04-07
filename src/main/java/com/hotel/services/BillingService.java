@@ -3,7 +3,7 @@ package com.hotel.services;
 import com.hotel.models.Bill;
 import com.hotel.models.Booking;
 import com.hotel.models.Customer;
-import com.hotel.models.Room;
+import com.hotel.models.AbstractRoom;
 import com.hotel.repository.DataStore;
 
 import java.time.LocalDate;
@@ -30,14 +30,14 @@ public class BillingService {
 
         // Get Room price
         double price = 0.0;
-        for (Room r : roomService.getAllRooms()) {
+        for (AbstractRoom r : roomService.getAllRooms()) {
             if (r.getRoomNumber().equalsIgnoreCase(booking.getRoomNumber())) {
                 price = r.getPricePerNight();
                 break;
             }
         }
 
-        double totalAmount = daysBetween * price;
+        double totalAmount = (daysBetween * price) + booking.getExtraCost();
 
         // Get Customer Name
         String cName = booking.getCustomerId();
@@ -49,7 +49,7 @@ public class BillingService {
         }
 
         String billId = "INV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        Bill bill = new Bill(billId, booking.getBookingId(), cName, booking.getRoomNumber(), totalAmount, LocalDate.now());
+        Bill bill = new Bill(billId, booking.getBookingId(), cName, booking.getRoomNumber(), totalAmount, LocalDate.now(), daysBetween);
         
         getAllBills().add(bill);
 
