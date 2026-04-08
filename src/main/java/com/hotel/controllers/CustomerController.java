@@ -56,6 +56,17 @@ public class CustomerController {
         colPhone.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getKey().getPhone()));
         colAllocatedRoom.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue()));
 
+        // Restrict phone field to 10 digits
+        txtPhone.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                txtPhone.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            if (txtPhone.getText().length() > 10) {
+                String s = txtPhone.getText().substring(0, 10);
+                txtPhone.setText(s);
+            }
+        });
+
         loadCustomers();
     }
 
@@ -83,6 +94,12 @@ public class CustomerController {
         
         if (id.isEmpty() || name.isEmpty() || phone.isEmpty()) {
             AlertBox.showError("Validation Error", "All fields must be filled!");
+            return;
+        }
+
+        // Validate phone number: exactly 10 digits
+        if (!phone.matches("\\d{10}")) {
+            AlertBox.showError("Validation Error", "Invalid Phone Number! Must be exactly 10 digits.");
             return;
         }
 
